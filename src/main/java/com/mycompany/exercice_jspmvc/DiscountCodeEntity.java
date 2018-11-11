@@ -9,6 +9,10 @@ public class DiscountCodeEntity {
         this.code = c;
         this.taux = t;
     }
+
+    DiscountCodeEntity() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
     public char getCode(){
         return code;
