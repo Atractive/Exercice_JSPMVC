@@ -55,7 +55,7 @@ public class DAO {
             
                 stmt.setString(1, String.valueOf(DCE.getCode()));
                 stmt.setFloat(2, DCE.getTaux());
-     
+                
 		return stmt.executeUpdate();
 
 	}  catch (SQLException ex) {
@@ -72,8 +72,8 @@ public class DAO {
         try (Connection connection = myDataSource.getConnection();
              PreparedStatement stmt = connection.prepareStatement(sql)) {
                 
-                stmt.setInt(1, code);
-		
+                stmt.setString(1, Character.toString(code));
+                
                 return stmt.executeUpdate();
 
 	}  catch (SQLException ex) {
@@ -81,6 +81,24 @@ public class DAO {
             throw new DAOException(ex.getMessage());
 	}
     
+    }
+    
+    public int MAJDiscountTaux(char code, float taux) throws DAOException {
+        
+        String sql = "UPDATE DISCOUNT_CODE SET RATE = ? WHERE DISCOUNT_CODE = ?";
+        
+        try (Connection connection = myDataSource.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
+                
+                stmt.setFloat(1, taux);
+                stmt.setString(2, Character.toString(code));
+                
+                return stmt.executeUpdate();
+                
+        } catch (SQLException ex) {
+            Logger.getLogger("DAO").log(Level.SEVERE, null, ex);
+            throw new DAOException(ex.getMessage());
+        }
     }
     
 }

@@ -1,4 +1,6 @@
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <!DOCTYPE html>
 <html>
@@ -12,6 +14,7 @@
         
         <h1>Edition des taux de remise</h1>
         
+        <div>
         <form method="GET">
             
             Code :
@@ -28,7 +31,11 @@
             <input type="submit" value="Ajouter">
             
         </form>
+        </div>
         
+        <div><h4>${message}</h4></div>
+        
+        <div>
         <table style = 'border : 1px solid black'>
             
             <tr>
@@ -41,12 +48,13 @@
                 <tr>
                 <td>${dce.code}</td>
                 <td>${dce.taux}</td>
-                <td><a href="?action=DELETE&amp;code=${dce.code}">Delete</a></td>
+                <td><a href="?action=DELETE&code=${dce.code}">Delete</a></td>
                 </tr>
             </c:forEach>
                     
         </table>
-        
+        </div>      
+
     </body>
     
 </html>

@@ -24,31 +24,45 @@ public class Controller extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, SQLException {
+            throws ServletException, IOException, SQLException, DAOException {
         
         try {
             
             DAO myDAO = new DAO(DataSourceFactory.getDataSource());
+                       
+            String codeS = request.getParameter("code");
+            String tauxS = request.getParameter("taux");
+            String action = request.getParameter("action");
+            String message = "";
             
+            if ("ADD".equals(action)) {
+                if ("".equals(codeS) || "".equals(tauxS)) {
+                    message = "Vous devez remplir les deux champs pour ajouter une remise";
+                } else {
+                    try {
+                        DiscountCodeEntity dce = new DiscountCodeEntity(codeS.charAt(0), Float.parseFloat(tauxS));
+                        myDAO.AddDiscountCode(dce);
+                    } catch (DAOException s) {
+                        myDAO.MAJDiscountTaux(codeS.charAt(0), Float.parseFloat(tauxS));
+                    }
+                }
+            }
+            
+            if ("DELETE".equals(action)) {
+                if ("".equals(codeS)==false){
+                    try {
+                        myDAO.DeleteDiscountCode(codeS.charAt(0));
+                    } catch (DAOException s) {
+                        message = "Il est impossible de supprimer le code "+codeS;
+                    }
+                }
+            }
+          
             List<DiscountCodeEntity> dcelist = myDAO.ListDiscountCode();
             request.setAttribute("dcelist", dcelist);
+            request.setAttribute("message",message);
             
-            String action = request.getParameter("action");
-            String codeS = request.getParameter("code");
-            char code = codeS.charAt(0);
-            String tauxS = request.getParameter("taux");
-            float taux = Float.valueOf(tauxS.trim()); 
-            
-            if (action.equals("ADD")){
-                DiscountCodeEntity DCE = new DiscountCodeEntity(code,taux);
-                myDAO.AddDiscountCode(DCE);
-            }
-            
-            if (action.equals("DELETE")){
-                myDAO.DeleteDiscountCode(code);
-            }
-            
-            request.getRequestDispatcher("../view.jsp").forward(request, response);
+            request.getRequestDispatcher("view.jsp").forward(request, response);
             
         } catch (DAOException ex) {
             Logger.getLogger("servlet").log(Level.SEVERE, "Erreur de traitement", ex);
@@ -70,7 +84,11 @@ public class Controller extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            processRequest(request, response);
+            try {
+                processRequest(request, response);
+            } catch (DAOException ex) {
+                Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+            }
         } catch (SQLException ex) {
             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -88,7 +106,11 @@ public class Controller extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            processRequest(request, response);
+            try {
+                processRequest(request, response);
+            } catch (DAOException ex) {
+                Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+            }
         } catch (SQLException ex) {
             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
         }
