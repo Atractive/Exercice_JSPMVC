@@ -34,9 +34,9 @@
         </div>
         
         <div><h4>${message}</h4></div>
-        
+
         <div>
-        <table style = 'border : 1px solid black'>
+        <table border = 2>
             
             <tr>
             <th>Code</th>

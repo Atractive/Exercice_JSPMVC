@@ -101,5 +101,27 @@ public class DAO {
         }
     }
     
+    public int NumberOfDiscountCode() throws SQLException {
+        
+        int result = 0;
+        String sql = "SELECT COUNT(*) AS NUMBER FROM DISCOUNT_CODE";
+        
+        try (Connection connection = myDataSource.getConnection();
+             Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+                
+                if (rs.next()){
+                    result = rs.getInt("NUMBER");
+                }
+                
+        } catch (SQLException ex) {
+            Logger.getLogger("DAO").log(Level.SEVERE, null, ex);
+            throw new SQLException(ex.getMessage());
+        }
+        
+        return result;
+        
+    }
+    
 }
     
