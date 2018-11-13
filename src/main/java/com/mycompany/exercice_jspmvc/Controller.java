@@ -42,7 +42,7 @@ public class Controller extends HttpServlet {
                     try {
                         DiscountCodeEntity dce = new DiscountCodeEntity(codeS.charAt(0), Float.parseFloat(tauxS));
                         myDAO.AddDiscountCode(dce);
-                    } catch (DAOException s) {
+                    } catch (DAOException de) {
                         myDAO.MAJDiscountTaux(codeS.charAt(0), Float.parseFloat(tauxS));
                     }
                 }
@@ -52,7 +52,7 @@ public class Controller extends HttpServlet {
                 if ("".equals(codeS)==false){
                     try {
                         myDAO.DeleteDiscountCode(codeS.charAt(0));
-                    } catch (DAOException s) {
+                    } catch (DAOException de) {
                         message = "Il est impossible de supprimer le code "+codeS;
                     }
                 }
